@@ -24,21 +24,19 @@ class Matrix:
             #print(*i, sep = " | ")
 
     def addRow(self, vRow, rowNum): #adds row to a matrix
-        if (len(vRow) == self.y) & (rowNum == self.x): #check if array count and column number are even
+        if (len(vRow) == self.y) & (rowNum < self.x): #check if array count and column number are even
             for i in range(self.y): #for every element in row / for every column
                 self.rows[rowNum][i] = vRow[i] #add element in specified row (rowNum)
         else:
             print("Wrong number of row or number of elements in array is not even to number of columns in matrix.")
 
 
-m = Matrix(4,2)
-r1 = [1, 2]
-m.addRow(r1, 5)
-m.printMatrix()
+m1 = Matrix(4,2)
+m1.addRow([1,2], 2)
+m1.printMatrix()
+
 #print(m.rows[0][0])
 #m.rows[0][0] = "not empty"
 #m.printMatrix()
-
-
 
 #class Row:

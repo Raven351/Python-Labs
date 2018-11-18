@@ -16,7 +16,7 @@ class Tranzakcje:
 Tk().withdraw()
 ### Napisać skrypt, który z podanego folderu (przykładowy folder i pliki w z6 dane) 
 ### wybierze wszystkie pliki z rozszerzeniem .csv i stworzy nowe pliki z informacjami o:
-di = filedialog.askdirectory(title = 'Wybierz folder')  
+di = filedialog.askdirectory(title = 'Wybierz folder do odczytu plikow .csv z danymi')  
 files = os.listdir(di) 
 print(files)
 print(len(files))
@@ -35,9 +35,9 @@ for i in range(len(files)):                         #for every file name
 print("TEST")
 print(Tranzakcje.listaTranzakcji[28].data)
 
-
 ### -sumarycznej kwocie transakcji w poszczególnych placówkach (uwaga: przykładowe pliki uwzględniają 3 placówki, ale przyjmujemy, że nie mamy pewności, ile ich jest), 
 def sumPlacowki(): ##used objects
+    fn = di + '/' + "sumPlacowki" + '.txt'
     s = list()
     for p in range(len(Tranzakcje.listaPlacówek)):
         total = 0
@@ -45,21 +45,19 @@ def sumPlacowki(): ##used objects
             if Tranzakcje.listaTranzakcji[tranzakcja].placowka == Tranzakcje.listaPlacówek[p]:
                 total += Tranzakcje.listaTranzakcji[tranzakcja].kwota
         s.append('Placowka nr ' + str(Tranzakcje.listaPlacówek[p]) + ': ' + str(total))
-    return s
-
-dt = Tranzakcje.listaTranzakcji[0].data.isocalendar()[1]
-print(str(dt))
-
-s = sumPlacowki()
-
-for i in range(len(s)):
-    print(s[i])
+    print(fn)
+    with open(fn, 'w+') as f:
+        for i in range(len(s)):
+            f.write(s[i] + '\n')
+    f.close()
 
 
 ### -średniej (dla wszystkich placówek) wysokości transakcji w poszczególnych tygodniach (uwaga: przykładowe pliki grupują transakcje tygodniami, ale przyjmujemy, że nie jest to zagwarantowane) 
 
 def avgAllInWeek(): ##used dictionaries
     weeks = {}
+    avarages = list()
+    fn = di + '/' + "avgWszystkiePlacowki" + '.txt' 
     for p in range(len(Tranzakcje.listaTranzakcji)):
         dt = Tranzakcje.listaTranzakcji[p].data.isocalendar()[1]
         if str(dt) not in weeks:
@@ -69,14 +67,13 @@ def avgAllInWeek(): ##used dictionaries
         else:
             weeks[str(dt)]["Suma"] += Tranzakcje.listaTranzakcji[p].kwota
             weeks[str(dt)]["Ilosc"] += 1
-    avarages = list()
     for x in weeks:
         avarage = "Srednia kwota tranzakcji dla wszystkich placowek w tygodniu nr " + x + " wynosi: " + str(weeks[x]['Suma']/weeks[x]['Ilosc'])
         avarages.append(avarage)
-    return avarages
-
-aai = avgAllInWeek()
-print (aai)
+    with open(fn, 'w+') as f:
+        for i in range(len(avarages)):
+            f.write(avarages[i] + '\n')
+    f.close()
         
 
 
@@ -84,6 +81,7 @@ print (aai)
 def avgOneInWeek():
     insts = {}
     avarages = list()
+    fn = di + '/' + "avgPojedynczePlacowki" + '.txt' 
     for p in range(len(Tranzakcje.listaTranzakcji)):
         dt = str(Tranzakcje.listaTranzakcji[p].data.isocalendar()[1])
         inst = str(Tranzakcje.listaTranzakcji[p].placowka)
@@ -103,12 +101,14 @@ def avgOneInWeek():
         for y in insts[x]:
             avarage = "Srednia kwota tranzakcji dla placowki nr " + str(x) + " w tygodniu nr " + str(y) + " wynosi: " + str(insts[x][y]['Suma']/insts[x][y]['Ilosc'])
             avarages.append(avarage)
-    return avarages
-
-aii = avgOneInWeek()
-print(aii)
+    with open(fn, 'w+') as f:
+        for i in range(len(avarages)):
+            f.write(avarages[i] + '\n')
+    f.close()
             
-
+sumPlacowki()
+avgAllInWeek()
+avgOneInWeek()
             
 
 

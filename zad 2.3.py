@@ -37,7 +37,7 @@ print(Tranzakcje.listaTranzakcji[28].data)
 
 
 ### -sumarycznej kwocie transakcji w poszczególnych placówkach (uwaga: przykładowe pliki uwzględniają 3 placówki, ale przyjmujemy, że nie mamy pewności, ile ich jest), 
-def sumPlacowki():
+def sumPlacowki(): ##used objects
     s = list()
     for p in range(len(Tranzakcje.listaPlacówek)):
         total = 0
@@ -47,6 +47,9 @@ def sumPlacowki():
         s.append('Placowka nr ' + str(Tranzakcje.listaPlacówek[p]) + ': ' + str(total))
     return s
 
+dt = Tranzakcje.listaTranzakcji[0].data.isocalendar()[1]
+print(str(dt))
+
 s = sumPlacowki()
 
 for i in range(len(s)):
@@ -55,7 +58,58 @@ for i in range(len(s)):
 
 ### -średniej (dla wszystkich placówek) wysokości transakcji w poszczególnych tygodniach (uwaga: przykładowe pliki grupują transakcje tygodniami, ale przyjmujemy, że nie jest to zagwarantowane) 
 
+def avgAllInWeek(): ##used dictionaries
+    weeks = {}
+    for p in range(len(Tranzakcje.listaTranzakcji)):
+        dt = Tranzakcje.listaTranzakcji[p].data.isocalendar()[1]
+        if str(dt) not in weeks:
+            weeks[str(dt)] = {}
+            weeks[str(dt)]["Suma"] = Tranzakcje.listaTranzakcji[p].kwota
+            weeks[str(dt)]["Ilosc"]= 1
+        else:
+            weeks[str(dt)]["Suma"] += Tranzakcje.listaTranzakcji[p].kwota
+            weeks[str(dt)]["Ilosc"] += 1
+    avarages = list()
+    for x in weeks:
+        avarage = "Srednia kwota tranzakcji dla wszystkich placowek w tygodniu nr " + x + " wynosi: " + str(weeks[x]['Suma']/weeks[x]['Ilosc'])
+        avarages.append(avarage)
+    return avarages
+
+aai = avgAllInWeek()
+print (aai)
+        
+
+
 ### -średnim tygodniowym przychodzie z poszczególnych placówek
+def avgOneInWeek():
+    insts = {}
+    avarages = list()
+    for p in range(len(Tranzakcje.listaTranzakcji)):
+        dt = str(Tranzakcje.listaTranzakcji[p].data.isocalendar()[1])
+        inst = str(Tranzakcje.listaTranzakcji[p].placowka)
+        if inst not in insts:
+            insts[inst] = {}
+            insts[inst][dt] = {}
+            insts[inst][dt]["Suma"] =  Tranzakcje.listaTranzakcji[p].kwota
+            insts[inst][dt]["Ilosc"] =  1
+        elif dt not in insts[inst]:
+            insts[inst][dt] = {}
+            insts[inst][dt]["Suma"] =  Tranzakcje.listaTranzakcji[p].kwota
+            insts[inst][dt]["Ilosc"] =  1 
+        else:
+            insts[inst][dt]["Suma"] +=  Tranzakcje.listaTranzakcji[p].kwota
+            insts[inst][dt]["Ilosc"] +=  1      
+    for x in insts:
+        for y in insts[x]:
+            avarage = "Srednia kwota tranzakcji dla placowki nr " + str(x) + " w tygodniu nr " + str(y) + " wynosi: " + str(insts[x][y]['Suma']/insts[x][y]['Ilosc'])
+            avarages.append(avarage)
+    return avarages
+
+aii = avgOneInWeek()
+print(aii)
+            
+
+            
 
 
 
